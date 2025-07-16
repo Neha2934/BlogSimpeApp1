@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 public class AppDbContext : DbContext
 {
+    public DbSet<Status> Statuses { get; set; }
     public DbSet<Blog> Blogs { get; set; }
     public DbSet<Post> Posts { get; set; }
     public DbSet<BlogType> BlogTypes { get; set; }
@@ -53,5 +54,12 @@ public class AppDbContext : DbContext
             .WithMany(u => u.Posts)
             .HasForeignKey(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Blog>(entity =>
+        {
+            entity.HasOne(b => b.Status)
+                  .WithMany(s => s.Blogs)
+                  .HasForeignKey(b => b.StatusId);
+        });
     }
 }
